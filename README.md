@@ -1,182 +1,135 @@
 ![logo2](https://user-images.githubusercontent.com/33743193/122555900-2bb71a00-d03b-11eb-8b01-92e194bd4d86.png)
 
-## Functional Printing
+## Threading Class
 
-This is a created class for functional printing.
+This is a created class for threading that can run in infinite loop.
 
-* Printing with time, date or timedate stamps.
-* Adding colors to increasing interactivity.
-* Can be used itself, or imported with its class
+* Creating a class for threading.
+* Being able to stop it with special stop() method.
+* Adjusting deamon state of the created thread.
 
 ### Used external modules
-1. [Datetime Module / import datetime](https://docs.python.org/3/library/datetime.html)
-2. [System Module / import sys](https://docs.python.org/3/library/sys.html)
+1. [Threading Module / import datetime](https://docs.python.org/3/library/threading.html)
+2. [Time Module / import sys](https://docs.python.org/3/library/time.html)
 
-### Avaliable printing options
-1. Print with time stamp (hh.mm.ss)
-2. Print with date stamp (dd/mm/yyyy)
-3. Print with date and time stamps (dd/mm/yyyy - hh.mm.ss)
-4. Available colors: Purple, Blue, Cyan, Green, Yellow, Red, Normal
+### Availability properties
+1. Multiple thread class can be created
+2. Each thread can run in infinity loop (while loop)
+3. Special stop() method to stop the thread which is inside the loop
+4. Availability to set deamon statue of the thread
 
-__Note__: Colors can be used with any options of stamping.
+__Note__: If thread is not deamon, be sure that you called stop() method
 
 ---
 ### Code and Syntax
 
-> It must has datetime and sys modules with `import datetime, sys`
+> It must has threading and time modules with `import threading, time`
 
 ```python
-import datetime
-import sys
+import threading
+import time
 ```
-> After than that, colors has been defined together with a class, which is called as ` class BColor` to have stdout color codes with simple naming.
+> After than that, external function class has been created, which is called as ` class functionClass` to have example class that runs as thread.
 
 ```python
-class BColors:
+class functionClass:
     """
-    Color codes has been named for easy usage that can be called with their names.
+    This is the class that is going to be called as a Thread.
     """
-    purple = '\033[95m'
-    blue = '\033[94m'
-    cyan = '\033[96m'
-    green = '\033[92m'
-    yellow = '\033[93m'
-    red = '\033[91m'
-    normal = '\033[0m'
+    def function(self):
+        """
+        :return: It returns a string that we created in this example.
+        """
+        doSomething = f'Function runs in thread!'
+        print(doSomething)
+        return doSomething
+
 ```
-> To be able to create proper printing with stamps, `class PrintStamps` has been created with multiple functions.
+> To be able to create a thread, `class threadClass` has been created with parent class thread.
 
 ```python
-class PrintStamps:
+class threadClass(threading.Thread):
+    """
+    This is the threading class, that it can be called with an external method to be able run at separated thread.
+    It is default deamon thread which means when main thread ends, all program ends its running.
+    You can use as Non-Deamon thread as well which it will run even if main thread ends and you need to call
+    stop() method to be able to stop it.
+    """
+    def __init__(self, sleepTime, deamonState=True):
+        """
+        :param sleepTime: Time that has been implemented for sleeping time of the thread.
+        :param deamonState: Deamon state of the thread can be defined with this boolean.
+        """
+        super(threadClass, self).__init__()
+        self.deamonState = deamonState
+        self.sleepTime = sleepTime
+        self._stop_event = threading.Event()
+        self.setDaemon(self.deamonState)
 
-    def __init__(self, color):
+    def stop(self):
         """
-        :param color: Enter desired color that has been alredy defined at BColors class!
-        Funtional printing object is being created. For seperation spacer can be changed according to wishes. 
+        :return: Stop event of the threading library to be able to end the thread which is in an infinite while loop.
         """
-        self.spacer = '------------------------------------------------------------------------------------'
-        self.color = color
+        print("Stop thread has been called!")
+        return self._stop_event.set()
 
-    def dateStamp(self, message):
+    def run(self):
         """
-        :param message: Text message that wanted to be printed
-        :return: This function returns to printed text message
-        Any message is being printed with defined stamp to create functional colorful printing
+        :return: It returns none
+        It is an infinete loop that has sleep time. To be able to stop it stop() method needs to be called.
         """
-        sys.stdout.write(self.color)
-        now = datetime.datetime.now()
-        text = f'{now.strftime("%d/%m/%Y")}: {message} \n{self.spacer}'
-        print(text)
-        return text
-
-    def timeStamp(self, message):
-        """
-        :param message: Text message that wanted to be printed
-        :return: This function returns to printed text message
-        Any message is being printed with defined stamp to create functional colorful printing
-        """
-        sys.stdout.write(self.color)
-        now = datetime.datetime.now()
-        text = f'{now.strftime("%X")}: {message} \n{self.spacer}'
-        print(text)
-        return text
-
-    def datetimeStamp(self, message):
-        """
-        :param message: Text message that wanted to be printed
-        :return: This function returns to printed text message
-        Any message is being printed with defined stamp to create functional colorful printing
-        """
-        sys.stdout.write(self.color)
-        now = datetime.datetime.now()
-        text = f'{now.strftime("%d/%m/%Y - %X")}: {message} \n{self.spacer}'
-        print(text)
-        return text
+        print("Thread has been started!")
+        Action = functionClass()
+        while not self._stop_event.is_set():
+            print("Thread is running!")
+            Action.function()
+            time.sleep(self.sleepTime)
+        print("Thread has stopped!")
 ```
-> That, it can be created as multiple times for each spesific usage or, it can be created with one purpuse and different variations of the stamping options.
 
-> As final test implementation, `if __name__ == '__main__':` has been added to test each functinallty.
+> As final test implementation, `if __name__ == '__main__':` has been added to test each functionality.
 
 ```python
 if __name__ == '__main__':
-    printPurple = PrintStamps(BColors.purple)
-    printBlue = PrintStamps(BColors.blue)
-    printCyan = PrintStamps(BColors.cyan)
-    printGreen = PrintStamps(BColors.green)
-    printYellow = PrintStamps(BColors.yellow)
-    printRed = PrintStamps(BColors.red)
-    printNormal = PrintStamps(BColors.normal)
-    printPurple.dateStamp('Printing with date stamp!')
-    printPurple.timeStamp('Printing with time stamp!')
-    printPurple.datetimeStamp('Printing with date and time stamp!')
-    printBlue.dateStamp('Printing with date stamp and error!')
-    printBlue.timeStamp('Printing with time stamp!')
-    printBlue.datetimeStamp('Printing with date and time stamp!')
-    printCyan.dateStamp('Printing with date stamp and error!')
-    printCyan.timeStamp('Printing with time stamp!')
-    printCyan.datetimeStamp('Printing with date and time stamp!')
-    printGreen.dateStamp('Printing with date stamp and error!')
-    printGreen.timeStamp('Printing with time stamp!')
-    printGreen.datetimeStamp('Printing with date and time stamp!')
-    printYellow.dateStamp('Printing with date stamp and error!')
-    printYellow.timeStamp('Printing with time stamp!')
-    printYellow.datetimeStamp('Printing with date and time stamp!')
-    printRed.dateStamp('Printing with date stamp and error!')
-    printRed.timeStamp('Printing with time stamp!')
-    printRed.datetimeStamp('Printing with date and time stamp!')
-    printNormal.dateStamp('Printing with date stamp and error!')
-    printNormal.timeStamp('Printing with time stamp!')
-    printNormal.datetimeStamp('Printing with date and time stamp!')
+    """
+    If it has been created as Non-Deamon thread, it is important to use stop() method to finish the thread
+    Otherwise it will always run even if the main thread is finished!
+    If thread is Deamon thread and main thread ends, it will automatically ends with it together, that no need to call
+    stop() method at the end of your main thread execution. 
+    """
+    MyThread1 = threadClass(1, False)
+    MyThread1.start()
+    time.sleep(5)
+    print("Main thread ends!")
+    MyThread1.stop()
 
 ```
 > And when you run the code, output will be like;
 
 ```python
-18/06/2021: Printing with date stamp with Purple! 
-------------------------------------------------------------------------------------
-12:23:57: Printing with time stamp with Purple! 
-------------------------------------------------------------------------------------
-18/06/2021 - 12:23:57: Printing with date and time stamp with Purple! 
-------------------------------------------------------------------------------------
-18/06/2021: Printing with date stamp with Blue! 
-------------------------------------------------------------------------------------
-12:23:57: Printing with time stamp with Blue! 
-------------------------------------------------------------------------------------
-18/06/2021 - 12:23:57: Printing with date and time stamp with Blue! 
-------------------------------------------------------------------------------------
-18/06/2021: Printing with date stamp with Cyan! 
-------------------------------------------------------------------------------------
-12:23:57: Printing with time stamp with Cyan! 
-------------------------------------------------------------------------------------
-18/06/2021 - 12:23:57: Printing with date and time stamp with Cyan! 
-------------------------------------------------------------------------------------
-18/06/2021: Printing with date stamp with Green! 
-------------------------------------------------------------------------------------
-12:23:57: Printing with time stamp with Green! 
-------------------------------------------------------------------------------------
-18/06/2021 - 12:23:57: Printing with date and time stamp with Green! 
-------------------------------------------------------------------------------------
-18/06/2021: Printing with date stamp with Yellow! 
-------------------------------------------------------------------------------------
-12:23:57: Printing with time stamp with Yellow! 
-------------------------------------------------------------------------------------
-18/06/2021 - 12:23:57: Printing with date and time stamp with Yellow! 
-------------------------------------------------------------------------------------
-18/06/2021: Printing with date stamp with Red! 
-------------------------------------------------------------------------------------
-12:23:57: Printing with time stamp with Red! 
-------------------------------------------------------------------------------------
-18/06/2021 - 12:23:57: Printing with date and time stamp with Red! 
-------------------------------------------------------------------------------------
-18/06/2021: Printing with date stamp with Normal/Gray! 
-------------------------------------------------------------------------------------
-12:23:57: Printing with time stamp with Normal/Gray! 
-------------------------------------------------------------------------------------
-18/06/2021 - 12:23:57: Printing with date and time stamp with Normal/Gray! 
-------------------------------------------------------------------------------------
+Thread has been started!
+Thread is running!
+Function runs in thread!
+Thread is running!
+Function runs in thread!
+Thread is running!
+Function runs in thread!
+Thread is running!
+Function runs in thread!
+Thread is running!
+Function runs in thread!
+Main thread ends!
+Stop thread has been called!
+Thread has stopped!
+
+Process finished with exit code 0
 ```
 
-__Note__: Output comes with added colors but cannot be seen here!
+__Note__: Thread which is running in the infinite loop can be stopped with stop() method.  
+If you thread is Non-Deamon, it is important to stop it before main thread ends. Otherwise,  
+it will run all the time. If it is a Deamon thread, it is not important to stop at the end of  
+main thead, because it will stop and end as soon as main thread ends. You can still used stop()  
+middle of the main thread even if it is  Deamon thread.
 
 
 
