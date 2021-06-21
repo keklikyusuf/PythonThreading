@@ -125,11 +125,10 @@ Thread has stopped!
 Process finished with exit code 0
 ```
 
-__Note__: Thread which is running in the infinite loop can be stopped with stop() method.  
-If you thread is Non-Deamon, it is important to stop it before main thread ends. Otherwise,  
-it will run all the time. If it is a Deamon thread, it is not important to stop at the end of  
-main thead, because it will stop and end as soon as main thread ends. You can still used stop()  
-middle of the main thread even if it is  Deamon thread.
+__Note__: Thread which is running in the infinite loop can be stopped with stop() method. If you thread is Non-Deamon,  
+it is important to stop it before main thread ends. Otherwise, it will run all the time. If it is a Deamon thread,  
+it is not important to stop at the end of main thead, because it will stop and end as soon as main thread ends.  
+You can still used stop() middle of the main thread even if it is  Deamon thread.
 
 
 
