@@ -12,7 +12,7 @@ This is a created class for threading that can run in infinite loop.
 1. [Threading Module / import datetime](https://docs.python.org/3/library/threading.html)
 2. [Time Module / import sys](https://docs.python.org/3/library/time.html)
 
-### Availability properties
+### Available properties
 1. Multiple thread class can be created
 2. Each thread can run in infinity loop (while loop)
 3. Special stop() method to stop the thread which is inside the loop
